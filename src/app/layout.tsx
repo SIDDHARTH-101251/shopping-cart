@@ -9,8 +9,13 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Purrfect Picks | Cat-approved cart",
-  description: "Purrfect Picks — a cozy, cat-approved dashboard for browsing, roasting, and approving products.",
+  title: "Purrfect Picks | EEPY-approved cart",
+  description: "Purrfect Picks — a cozy, EEPY-approved dashboard for browsing, roasting, and approving products.",
+  icons: {
+    icon: "/purrfect-picks.svg",
+    shortcut: "/purrfect-picks.svg",
+    apple: "/purrfect-picks.svg",
+  },
 };
 
 export default function RootLayout({
