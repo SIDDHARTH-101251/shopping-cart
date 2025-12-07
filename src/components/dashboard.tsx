@@ -704,7 +704,7 @@ export function Dashboard({
   const ToolbarControls = () => (
     <>
       {userRole === "user" ? (
-        <div className="inline-flex items-center gap-2 rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-emerald-200 shadow-inner shadow-emerald-500/30">
+        <div className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.1em] text-emerald-200 shadow-inner shadow-emerald-500/30 sm:px-3 sm:py-1 sm:text-xs">
           EEPY-approved
         </div>
       ) : null}
@@ -804,7 +804,7 @@ export function Dashboard({
         </div>
       ) : null}
 
-      <div className="flex-1 min-h-0 overflow-y-auto pr-1">
+      <div className="flex-1 min-h-0 overflow-y-auto pr-1 px-3 pb-3 sm:px-0 sm:pb-0">
         {optimisticProducts.length === 0 ? (
           <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-slate-900/70 via-slate-900/40 to-slate-900/70 p-10 text-center text-slate-300 shadow-xl shadow-emerald-500/10">
             <p className="text-lg font-semibold text-white">No products yet</p>
