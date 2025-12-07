@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${jakarta.variable} bg-slate-950 text-slate-100 antialiased`}>{children}</body>
+      <body className={`${jakarta.variable} bg-slate-950 text-slate-100 antialiased lg:cursor-none`}>{children}</body>
     </html>
   );
 }

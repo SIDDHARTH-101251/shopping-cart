@@ -36,6 +36,13 @@ a {
   color: #ecfeff;
 }
 
+@media (min-width: 1024px) {
+  body,
+  body * {
+    cursor: none !important;
+  }
+}
+
 @keyframes pop-card {
   0% {
     transform: scale(0.98);

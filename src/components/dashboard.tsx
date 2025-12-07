@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { FormEvent, startTransition, useEffect, useOptimistic, useState } from "react";
+import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 
 const CatFollower = dynamic(() => import("./cat-follower"), { ssr: false });
@@ -526,6 +527,8 @@ export function Dashboard({
   const [cardPulse, setCardPulse] = useState<Record<string, "approve" | "reject">>({});
   const [showApprovedOnly, setShowApprovedOnly] = useState(false);
   const [resettingAll, setResettingAll] = useState(false);
+  const [navPortalMobile, setNavPortalMobile] = useState<HTMLElement | null>(null);
+  const [navPortalDesktop, setNavPortalDesktop] = useState<HTMLElement | null>(null);
 
   const renderedProducts = React.useMemo(() => {
     const map = new Map<string, ProductDTO>();
@@ -681,6 +684,11 @@ export function Dashboard({
   }, []);
 
   useEffect(() => {
+    setNavPortalMobile(document.getElementById("nav-controls"));
+    setNavPortalDesktop(document.getElementById("nav-controls-desktop"));
+  }, []);
+
+  useEffect(() => {
     if (previewImage) {
       const frame = requestAnimationFrame(() => setPreviewGrowIn(true));
       return () => cancelAnimationFrame(frame);
@@ -693,61 +701,101 @@ export function Dashboard({
   const modalWidth = Math.min(Math.max(viewportSize.width - horizontalPadding * 2, 360), 1200);
   const modalHeight = Math.min(Math.max(viewportSize.height - verticalPadding * 2, 360), 900);
 
+  const ToolbarControls = () => (
+    <>
+      {userRole === "user" ? (
+        <div className="inline-flex items-center gap-2 rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-emerald-200 shadow-inner shadow-emerald-500/30">
+          EEPY-approved
+        </div>
+      ) : null}
+      <span className="inline-flex items-center gap-1 rounded-full bg-white/5 px-3 py-2 text-xs font-semibold text-slate-300 ring-1 ring-white/10">
+        <svg className="h-4 w-4 text-emerald-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7}>
+          <circle cx="12" cy="12" r="9" className="opacity-60" />
+          <path d="M12 7v5l3 2" />
+        </svg>
+        <span className="hidden sm:inline">Items:</span>
+        {renderedProducts.length}
+      </span>
+      <button
+        onClick={() => setShowApprovedOnly((prev) => !prev)}
+        className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition sm:px-4 sm:text-sm ${
+          showApprovedOnly
+            ? "border border-emerald-400/60 bg-emerald-400/15 text-emerald-100 shadow-lg shadow-emerald-500/25"
+            : "border border-white/15 bg-white/5 text-slate-200 hover:border-emerald-400/40"
+        }`}
+        aria-label={showApprovedOnly ? "Show all" : "Show approved"}
+      >
+        <svg className="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7}>
+          <path d="M3 7h18" />
+          <path d="M6 12h12" />
+          <path d="M10 17h4" />
+        </svg>
+        <span className="hidden sm:inline">{showApprovedOnly ? "Show all" : "Show approved"}</span>
+      </button>
+      {userRole === "admin" ? (
+        <button
+          onClick={handleResetAllToPending}
+          disabled={resettingAll}
+          className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 p-2 text-amber-100 shadow-lg shadow-amber-500/25 transition hover:-translate-y-0.5 hover:border-amber-300/70 hover:text-amber-50 disabled:opacity-60"
+          aria-label="Reset all to pending"
+          title="Reset all to pending"
+        >
+          {resettingAll ? (
+            <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+              <circle cx="12" cy="12" r="9" className="opacity-30" />
+              <path d="M12 3v6l4-2" />
+            </svg>
+          ) : (
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+              <path d="M21 12a9 9 0 1 1-9-9" />
+              <path d="M21 3v6h-6" />
+            </svg>
+          )}
+        </button>
+      ) : null}
+      {userRole === "admin" ? (
+        <button
+          onClick={() => setModalOpen(true)}
+          className="inline-flex items-center gap-1 rounded-xl bg-emerald-500 px-3 py-2 text-xs font-semibold text-slate-950 shadow-lg shadow-emerald-500/25 transition hover:-translate-y-0.5 hover:bg-emerald-400 sm:px-4 sm:text-sm"
+          aria-label="Add product"
+        >
+          <svg className="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+            <path d="M12 5v14" />
+            <path d="M5 12h14" />
+          </svg>
+          <span className="hidden sm:inline">Add product</span>
+        </button>
+      ) : null}
+    </>
+  );
+
   return (
-    <section className="flex h-full flex-col space-y-8 overflow-hidden">
+    <section className="flex h-full flex-col space-y-6 overflow-hidden">
       <CatFollower />
       <CatEmojiMobile />
-      <header className="flex flex-wrap items-center justify-between gap-4">
-        <div className="space-y-2">
-          <div className="inline-flex items-center gap-2 rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] text-emerald-200 shadow-inner shadow-emerald-500/30">
-            EEPY-approved picks
+      <header className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex-1" />
+        {!navPortalMobile && !navPortalDesktop ? (
+          <div className="flex flex-wrap items-center gap-2">
+            <ToolbarControls />
           </div>
-          <h1 className="text-3xl font-semibold text-white sm:text-4xl">Product board</h1>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="rounded-full bg-white/5 px-3 py-2 text-xs font-semibold text-slate-300 ring-1 ring-white/10">
-            {renderedProducts.length} items
-          </span>
-          <button
-            onClick={() => setShowApprovedOnly((prev) => !prev)}
-            className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition ${
-              showApprovedOnly
-                ? "border border-emerald-400/60 bg-emerald-400/15 text-emerald-100 shadow-lg shadow-emerald-500/25"
-                : "border border-white/15 bg-white/5 text-slate-200 hover:border-emerald-400/40"
-            }`}
-          >
-            {showApprovedOnly ? "Show all" : "Show approved"}
-          </button>
-          {userRole === "admin" ? (
-            <button
-              onClick={handleResetAllToPending}
-              disabled={resettingAll}
-              className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 p-2 text-amber-100 shadow-lg shadow-amber-500/25 transition hover:-translate-y-0.5 hover:border-amber-300/70 hover:text-amber-50 disabled:opacity-60"
-              aria-label="Reset all to pending"
-              title="Reset all to pending"
-            >
-              {resettingAll ? (
-                <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
-                  <circle cx="12" cy="12" r="9" className="opacity-30" />
-                  <path d="M12 3v6l4-2" />
-                </svg>
-              ) : (
-                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
-                  <path d="M21 12a9 9 0 1 1-9-9" />
-                  <path d="M21 3v6h-6" />
-                </svg>
-              )}
-            </button>
-          ) : null}
-          {userRole === "admin" ? (
-            <button
-              onClick={() => setModalOpen(true)}
-              className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-500/25 transition hover:-translate-y-0.5 hover:bg-emerald-400"
-            >
-              + Add product
-            </button>
-          ) : null}
-        </div>
+        ) : null}
+        {navPortalMobile
+          ? createPortal(
+              <div className="flex flex-wrap items-center gap-2 sm:hidden">
+                <ToolbarControls />
+              </div>,
+              navPortalMobile
+            )
+          : null}
+        {navPortalDesktop
+          ? createPortal(
+              <div className="hidden flex-wrap items-center gap-2 sm:flex">
+                <ToolbarControls />
+              </div>,
+              navPortalDesktop
+            )
+          : null}
       </header>
 
       {errorMessage ? (

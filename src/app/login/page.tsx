@@ -15,7 +15,7 @@ export default async function LoginPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-rose-950 via-slate-950 to-indigo-950 px-6 py-12 text-slate-100">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-rose-950 via-slate-950 to-indigo-950 px-4 py-8 sm:px-6 sm:py-12 text-slate-100">
       <div className="pointer-events-none absolute inset-0 opacity-70">
         <div className="absolute left-8 top-10 h-48 w-48 rounded-full bg-rose-500/25 blur-3xl" />
         <div className="absolute right-6 bottom-10 h-52 w-52 rounded-full bg-emerald-400/20 blur-3xl" />
