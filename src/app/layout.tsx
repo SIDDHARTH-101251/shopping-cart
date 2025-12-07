@@ -9,8 +9,8 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Product Review Dashboard",
-  description: "Password-gated dashboard to review, approve, and manage products.",
+  title: "Purrfect Picks | Cat-approved cart",
+  description: "Purrfect Picks — a cozy, cat-approved dashboard for browsing, roasting, and approving products.",
 };
 
 export default function RootLayout({

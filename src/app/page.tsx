@@ -41,18 +41,30 @@ export default async function HomePage() {
       </div>
       <main className="relative z-10 mx-auto flex h-full max-w-6xl min-h-0 flex-col space-y-6 px-6 py-12">
         <header className="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 px-5 py-3 shadow-lg shadow-emerald-500/10 backdrop-blur-xl">
-          <div className="space-y-1">
-            <p className="text-xs uppercase tracking-[0.08em] text-emerald-300">Session</p>
-            <p className="text-sm text-slate-200">You are logged in.</p>
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-400 via-amber-300 to-emerald-300 text-2xl shadow-lg shadow-rose-500/30">
+              😺
+            </div>
+            <div className="space-y-1">
+              <p className="text-xs uppercase tracking-[0.08em] text-emerald-300">Purrfect Picks</p>
+              <p className="text-sm font-semibold text-white">Cat-approved cart</p>
+              <p className="text-xs text-slate-300">Cozy finds, gentle roasts, and instant approvals.</p>
+            </div>
           </div>
-          <form action={logoutAction}>
-            <button
-              type="submit"
-              className="rounded-xl border border-white/15 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-rose-400/60 hover:text-white hover:shadow-lg hover:shadow-rose-500/20"
-            >
-              Logout
-            </button>
-          </form>
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <p className="text-xs uppercase tracking-[0.08em] text-emerald-300">Session</p>
+              <p className="text-sm text-slate-200">You are logged in.</p>
+            </div>
+            <form action={logoutAction}>
+              <button
+                type="submit"
+                className="rounded-xl border border-white/15 px-4 py-2 text-sm font-semibold text-slate-100 transition hover:border-rose-400/60 hover:text-white hover:shadow-lg hover:shadow-rose-500/20"
+              >
+                Logout
+              </button>
+            </form>
+          </div>
         </header>
         <div className="flex-1 min-h-0 overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl shadow-emerald-500/10 backdrop-blur-xl">
           <div className="h-full">
